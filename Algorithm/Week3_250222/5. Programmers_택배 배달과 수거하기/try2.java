@@ -7,8 +7,6 @@
  배달/수거를 할때 lastindex부터 차례대로 검사를 하는데 이 자체를 하면 안될것같음
 */
 
-import java.util.Stack;
-
 public class Solution_2try {
     public long solution(int cap, int n, int[] deliveries, int[] pickups) {
         long answer = 0;
