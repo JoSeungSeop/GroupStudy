@@ -1,0 +1,97 @@
+
+# 프로토타입 패턴
+
+1. 개념
+    1. 객체를 생성할 때 기존 객체를 복사(clone)하여 새 객체를 생성하는 패턴
+    2. 이를 통해 객체를 새로 생성하는 비용을 줄이고, 객체 생성의 복잡성을 숨길 수 있음
+    
+2. 특징
+    1. 객체 복제(Cloning) : new 키워드를 사용하지 않고, 기존 객체를 복사하여 새 객체를 생성함
+    2. 객체 생성 비용 감소 : 객체를 새로 생성하는 것보다 복제하는 것이 비용이 적음
+    3. 동적인 객체 생성 : 런타임에 새로운 객체를 유연하게 생성 가능
+    
+3. 장단점
+    1. 장점
+        1. 객체 생성 비용 감소  : new 키워드를 사용하는 것보다 복사하는 것이 더 효율적임
+        2. 복잡한 객체 생성의 캡슐화 : 객체 생성이 복잡한 경우, 클론을 통해 쉽게 생성할 수 있음
+        3. 객체의 구조 유지 : 복사된 객체는 기존 객체의 구조를 유지하기 때문에 일관성을 가짐
+        
+    2. 단점
+        1. 깊은 복사가 필요한 경우 별도로 구현해야함
+        2. 복제할 객체가 많아질 경우 부작용이 생길 수 있음
+        
+4. 언제 쓰면 좋은가 (실제 사례)
+    1. 템플릿을 기반으로 문서를 복사해서 새 문서를 만들 때 (객체의 구조가 똑같아야 할 때)
+    2. 게임에서 몬스터나 NPC(Non-Player Character) 같은 오브젝트를 복제해서 사용할 때 (동일한 형태의 객체가 여러 개 필요할 때)
+    3. 기본 설정을 복사해서 유저 계정을 생성할 때
+    
+5. 예제
+
+```java
+//Prototype 인터페이스 정의
+interface Prototype {
+    Prototype clone(); //복제 메서드
+}
+
+//User 클래스 - Prototype 인터페이스 구현
+class User implements Prototype {
+    private String name;
+    private int age;
+    private String role; //역할 (ex: "일반 사용자", "관리자")
+
+    public User(String name, int age, String role) {
+        this.name = name;
+        this.age = age;
+        this.role = role;
+    }
+
+    //복제 기능 구현 (얕은 복사)
+    @Override
+    public Prototype clone() {
+        return new User(this.name, this.age, this.role);
+    }
+
+    //Setter
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    //출력용 메서드
+    public void showInfo() {
+        System.out.println("이름: " + name + ", 나이: " + age + ", 역할: " + role);
+    }
+}
+
+//Prototype 패턴 사용 예제
+public class PrototypeExample {
+    public static void main(String[] args) {
+        //기본 사용자 템플릿 생성
+        User baseUser = new User("기본 사용자", 25, "일반 사용자");
+        System.out.println("원본 사용자 : ");
+        baseUser.showInfo();
+				
+        //기본 사용자 정보를 복사하여 새로운 사용자 생성
+        User newUser = (User) baseUser.clone();
+				
+				/* new 연산자를 최소화하려고 쓰는건데 이렇게 하면 그냥 객체를 새로 만드는 것과 똑같음
+        newUser = new User("홍길동", 30, "프리미엄 사용자");
+        */
+        
+        //clone()한 객체를 직접 수정
+        newUser.setName("홍길동");
+        newUser.setAge(30);
+        newUser.setRole("프리미엄 사용자");
+
+        System.out.println("\n 복제된 사용자 (수정 후) : ");
+        newUser.showInfo();
+    }
+}
+```
